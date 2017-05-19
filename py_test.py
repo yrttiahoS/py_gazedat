@@ -4,6 +4,8 @@ import csv
 
 import sys
 
+#import math
+
 from collections import OrderedDict
 
 import routine # a script with functions
@@ -13,11 +15,32 @@ from my_classes import MyClass
 #print(sys.version)
 
 
-x = MyClass()
+#from os.path import join, getsize
+
+for root, dirs, files in os.walk('C:\\Users\\'):
+    if 'testing 7mo,trec2' in root:      
+        print(root, " ", end=" FOUND! ")
+        print("")
+
+#C:\\Users\\
 
 
-print(x.f())
-print(x.get_i())
+
+#x = MyClass()
+#print(x.__doc__)
+#round(k*3.14)
+#
+#y = []
+#k = 25
+#for i, item in enumerate(range(k+1)):
+#    print (str(i))
+##    yx = (i/k)*math.pi
+#    y.append (math.sin((i/k)*2*math.pi)) #*math.pi
+#    
+
+
+#print(x.f())
+#print(x.get_i())
 
 
 input_file = "headers_tre_5mo_to_7mo.txt"
@@ -26,6 +49,8 @@ input_file = "headers_txt_data.txt"
 input_file_delimiter = "\t"
 
 aa = ["q","w","e","r"]
+
+aa = [aa, aa, aa]
 
 #print(list(enumerate(aa)))
 

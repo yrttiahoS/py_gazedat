@@ -1,0 +1,10 @@
+22.5.2017
+-You can find folders by "walking" thourgh directories
+*"starting point", e.g., 'C:\\Users\\'
+*find match "if folder in root", where folder is a variable(string) name
+*code: for root, dirs, files in os.walk('C:\\Users\\'):        if folder in root:                  print(root, " ", end=" FOUND! ")
+
+23.5.3027
+-object oriented gazedata reading and processing
+*class defined in my_classes.py
+*gazedataOO_0.2.py uses the GazeReader from my_classes

@@ -24,5 +24,6 @@
 	**see also: http://stackoverflow.com/questions/651038/how-do-you-clone-a-git-repository-into-a-specific-folder
 
 -headers used in different gazedata formats are listen in: headers_in_sites.xlxs
-*headers for mi?
+*headers for mi? 
+	try finding with check_headers.py
 

@@ -30,3 +30,5 @@
 -check_headers.py now works
 *I analyxe mi headers
 
+-I made object oriented style header cheking and expanded my_classes with
+ class DataFolder

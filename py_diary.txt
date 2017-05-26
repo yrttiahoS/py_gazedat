@@ -26,3 +26,6 @@
 *headers for mi? 
  	try finding with check_headers.py
  
+26.5.2017
+-check_headers.py now works
+

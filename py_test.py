@@ -15,13 +15,17 @@ from my_classes import MyClass
 #print(sys.version)
 
 
-print(range(0,10))
 
-a = []
 
-for i in range(9):
-    a.append(i)
-    print(str(a))
+
+##
+##print(range(0,10))
+##
+##a = []
+##
+##for i in range(9):
+##    a.append(i)
+##    print(str(a))
 
 
 #from os.path import join, getsize
@@ -52,7 +56,10 @@ for i in range(9):
 
 
 
-#x = MyClass()
+x = MyClass("gillo")
+
+print(x.f())
+
 #print(x.__doc__)
 #round(k*3.14)
 #

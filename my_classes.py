@@ -27,11 +27,15 @@ class MyClass:
     """A simple example class"""
     #i = 12345
 
-    def __init__(self):
+    def __init__(self, arku = "qwerty"):
         self.i = 12345
+        self.word = arku
 
     def f(self):
-        return 'hello world'
+        if not self.word:
+            return 'hello world'
+        else:
+            return self.word
 
     def get_i(self):
         return self.i
@@ -129,3 +133,68 @@ class GazeReader:
     def restart(self):
         # resets the counter for new data rows, starts over again
         self.r_ind = -1
+
+
+class DataFolder:
+    """A class for accessing gazedata in a specific folder"""
+    
+    def __init__(self,
+                 path,
+                 limit_rows = None,
+                 limit_files = None,
+                 file_ext = ".gazedata",
+                 input_file_delimiter = '\t',
+                 map_header = None,
+                 output_folder = "C:\\Users\\Public\\Documents\\Tampereen yliopisto\\Eye tracker\\TRE Cohort 2\\gazeAnalysisLib analyses\\testing data",
+                 ): #t_args,
+
+        self.dirpath = path
+        self.limit_rows = limit_rows
+        self.limit_files = limit_files
+        self.file_ext = file_ext
+        self.file_delimiter = input_file_delimiter
+        self.map_header = map_header
+        self.output_folder = output_folder
+        self.headers_folder = os.getcwd()
+
+        if not self.map_header:
+            folder_path = os.path.split(self.dirpath)
+            folder_tail = folder_path[1]            
+            self.output_file = ( "headers in " + folder_tail + ".txt")
+                    
+        self.diritems = os.listdir(path)
+        print ("Directory contains " + str(len(self.diritems)) + " files.")
+
+        print(self.file_delimiter)
+
+        #self.greader = GazeReader(t_args, limit)
+
+
+    def set_output_foldder(self, folder):
+        self.output_folder = folder
+
+
+    def write_headers_to_file(self):
+
+        with open(os.path.join(self.output_folder, self.output_file), "wt") as outputfile:
+                
+            writer = csv.writer(self.outputfile, delimiter=self.file_delimiter)
+    
+            for filenum, file in islice(enumerate(self.diritems), 0, self.limit_files): 
+                #print ("Checking file " + str(filenum + 1) + '/' + str(len(diritems)))
+                if file.endswith(self.file_ext):
+                    print(os.path.join(self.output_folder, self.output_file))
+                    print ("Process file " + str(filenum + 1) + '/' + str(len(self.diritems)))
+                    print(file)
+
+                    #read in data, process, and strore in newrows
+                    args_pro = self.dirpath, file, self.map_header
+        
+                    # make new GazeReader object for reading and processing input file
+                    f_processor = GazeReader(args_pro, self.limit_rows) #40 is optional limit for rows
+        
+                    #f_processor.set_row_limit(40) # limit rows, good for debugging
+                    row_list_to_write = f_processor.get_headers()
+                    row_list_to_write.insert(0, file)
+                    writer.writerow( row_list_to_write )
+

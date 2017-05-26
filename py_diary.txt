@@ -1,4 +1,28 @@
+-You can find folders by "walking" thourgh directories
+ *"starting point", e.g., 'C:\\Users\\'
+ *find match "if folder in root", where folder is a variable(string) name
+ *code: for root, dirs, files in os.walk('C:\\Users\\'):
+     
+     if folder in root:      
+     
+         print(root, " ", end=" FOUND! ")
+ 
+ 
+23.5.3027
+-object oriented gazedata reading and processing
+*class defined in my_classes.py
+*gazedataOO_0.2.py uses the GazeReader from my_classes
 
-26.5.2017
--this diary was corrupted, start anew
-
+ 
+24.5.2017
+-I created a new GitHub repository for Python gazedata analyses
+*it can be "cloned" to laptop local folder on Git commandline by:
+ git clone git://github.com/yrttiahoS/py_gazedat
+ **saves to: C:\Users\infant\Documents\GitHub\py_gazedat
+ **command has repository's URL, but string "https" is omitted
+ **see also: http://stackoverflow.com/questions/651038/how-do-you-clone-a-git-repository-into-a-specific-folder
+ 
+-headers used in different gazedata formats are listen in: headers_in_sites.xlxs
+*headers for mi? 
+ 	try finding with check_headers.py
+ 

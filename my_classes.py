@@ -61,10 +61,13 @@ class GazeReader:
         
             # grab header information, into a list
             data_headers = next(reader) #reader.__next__() 
-                    
+                
             #data rows storage for this function            
             newrows = []
-    
+
+            if not self.maptable:
+                return newrows, data_headers
+            
             # loop file rows and cols,             
             for r, row in islice(enumerate(reader), 0, self._limit_row): #None                
                 newrow = []

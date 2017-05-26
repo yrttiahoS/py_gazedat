@@ -15,12 +15,38 @@ from my_classes import MyClass
 #print(sys.version)
 
 
+print(range(0,10))
+
+a = []
+
+for i in range(9):
+    a.append(i)
+    print(str(a))
+
+
 #from os.path import join, getsize
 
-for root, dirs, files in os.walk('C:\\Users\\'):
-    if 'testing 7mo,trec2' in root:      
-        print(root, " ", end=" FOUND! ")
-        print("")
+##for root, dirs, files in os.walk('C:\\Users\\'):
+##    if 'testing 7mo,trec2' in root:      
+##        print(root, " ", end=" FOUND! ")
+##        print("")
+
+
+##
+##
+##def funny(argue):
+##    if not argue:
+##        print("yell more")
+##    else:
+##        print("i agrue")
+##
+##funny("s")
+##
+##funny(None)
+##
+##
+##default_input_folder = "C:\\Users\\Public\\Documents\\Tampereen yliopisto\\Eye tracker\\TRE Cohort 2\\gazeAnalysisLib analyses\\testing 7mo,trec2"
+##print(os.path.isdir(default_input_folder))
 
 #C:\\Users\\
 
@@ -43,18 +69,18 @@ for root, dirs, files in os.walk('C:\\Users\\'):
 #print(x.get_i())
 
 
-input_file = "headers_tre_5mo_to_7mo.txt"
-input_file = "headers_txt_data.txt"
-
-input_file_delimiter = "\t"
-
-aa = ["q","w","e","r"]
-
-aa = [aa, aa, aa]
+##input_file = "headers_tre_5mo_to_7mo.txt"
+##input_file = "headers_txt_data.txt"
+##
+##input_file_delimiter = "\t"
+##
+##aa = ["q","w","e","r"]
+##
+##aa = [aa, aa, aa]
 
 #print(list(enumerate(aa)))
 
-bb = zip( range(20000,20001,1), aa)
+##bb = zip( range(20000,20001,1), aa)
 #print(list(range(3)))
 #print(list(bb))
 
@@ -63,16 +89,16 @@ bb = zip( range(20000,20001,1), aa)
 
 #a = routine.wonder(("amo", "rati", "her"))
 
-d = dict()
-od = OrderedDict()
-
-od["yks"] = 1
-od["kaks"] = 2
-od["kolme"] = 3
-
-d["yks"] = 1
-d["kaks"] = 2
-d["kolme"] = 3
+##d = dict()
+##od = OrderedDict()
+##
+##od["yks"] = 1
+##od["kaks"] = 2
+##od["kolme"] = 3
+##
+##d["yks"] = 1
+##d["kaks"] = 2
+##d["kolme"] = 3
 
 #print(od)
 #   print(d)
@@ -133,5 +159,3 @@ d["kolme"] = 3
 ##
 ##print ("Directory contains "
 ##+ str(len(diritems)) + " files.")
-
-

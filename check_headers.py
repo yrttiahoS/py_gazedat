@@ -11,13 +11,18 @@ from itertools import islice
 from my_classes import GazeReader
 
 
-input_folder = 'testing 7mo,trec2' #"C:\\Users\\Public\\Documents\\Tampereen yliopisto\\Eye tracker\\TRE Cohort 2\\gazeAnalysisLib analyses\\testing 7mo,trec2"
+default_input_folder = "D:\lasayr\Aaltonen\mi" #"C:\\Users\\Public\\Documents\\Tampereen yliopisto\\Eye tracker\\TRE Cohort 2\\gazeAnalysisLib analyses\\testing 7mo,trec2"
 
-n_files = 1 # set limit for files to be processed, None if no limit desired
+input_folder = "mi" #'testing 7mo,trec2' #"C:\\Users\\Public\\Documents\\Tampereen yliopisto\\Eye tracker\\TRE Cohort 2\\gazeAnalysisLib analyses\\testing 7mo,trec2"
+
+root_folder = "D\\" #"C:\\Users\\"
+
+
+n_files = None # set limit for files to be processed, None if no limit desired
 
 output_folder = os.getcwd()#"C:\\Users\\Public\\Documents\\Tampereen yliopisto\\Eye tracker\\TRE Cohort 2\\gazeAnalysisLib analyses\\testing data"
 
-output_file = "headers listing"
+output_file = ( "headers in " + input_folder + ".txt")
 
 file_ext = ".gazedata" #input file extension, .txt
 
@@ -29,9 +34,21 @@ headers_folder = os.getcwd() #path for headers inputfile
 
 headers_inputfile = "headers_tre_5mo_to_7mo.txt"
 
+
+# no headers are specified, instead find them in files
+
+map_header = None
+
+
 # find directory by "walking" through the system
 
-for root, dirs, files in os.walk('C:\\Users\\'):
+if os.path.isdir(default_input_folder):
+    start_folder = default_input_folder
+else:
+    start_folder = root_folder
+
+
+for root, dirs, files in os.walk(start_folder):
     
     if input_folder in root:      
     
@@ -40,6 +57,10 @@ for root, dirs, files in os.walk('C:\\Users\\'):
         print("")
         
         input_folder = root
+
+    else:
+        print(root)
+        
         
 print (input_folder)
 
@@ -77,16 +98,18 @@ for filenum, file in islice(enumerate(diritems), 0, n_files):
         
         f_processor.set_row_limit(40) # limit rows, good for debugging
         
-        #        print("Newrows length: " + str(f_processor.get_row_count()))
+        # print("Newrows length: " + str(f_processor.get_row_count()))
     
-        headers_in_files.append(str(filenum) + output_file_delimiter + f_processor.get_headers())
-        # open output file
+        headers_in_files.append( str(f_processor.get_headers())) # str(filenum+1) + output_file_delimiter +
+        
+
+# open output file 
 
 with open(os.path.join(output_folder, output_file), "wt") as outputfile:
 
     writer = csv.writer(outputfile, delimiter=output_file_delimiter)
 
-    for ii in enumerate(headers_in_files):
+    for ii in enumerate(headers_in_files, 1):
     
-        writer.writerow(ii)
+            writer.writerow(ii)
         

@@ -32,3 +32,17 @@
 
 -I made object oriented style header cheking and expanded my_classes with
  class DataFolder
+
+
+
+29.5.2017
+-explain headers in:
+C:\Users\Public\Documents\Tampereen yliopisto\Eye tracker\Aaltonen17\headers_in_sites.xlsx
+*tobii-pro-studio-user-manual.pdf, p: 144
+
+
+-find data values with: check_dataOO_0.1.py
+
+30.5.2017
+-I expanded my_classes and routine
+-I made a working version of check_dataOO_0.1.py

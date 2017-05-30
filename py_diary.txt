@@ -46,3 +46,5 @@ C:\Users\Public\Documents\Tampereen yliopisto\Eye tracker\Aaltonen17\headers_in_
 30.5.2017
 -I expanded my_classes and routine
 -I made a working version of check_dataOO_0.1.py
+
+-Include -1.#QNAN and 1.#QNAN to "null values"

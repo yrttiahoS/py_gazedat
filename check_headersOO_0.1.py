@@ -10,13 +10,13 @@ from my_classes import DataFolder
 folder_path = ("D:\\lasayr\\Aaltonen\\mi") #+ folder_name)
 
 # create new DataFolder to be inspected/processed
-data_folder = DataFolder(folder_path)
+data_folder = DataFolder(folder_path, limit_files = 1)
 
 # target output to current working directory, cwd
-data_folder.set_output_folder = os.getcwd() 
-
+data_folder.set_output_folder(os.getcwd())
+            
 #print(os.getcwd() )
-
+    
 ##
 
 # list headers from differt files to output "log"

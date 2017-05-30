@@ -10,12 +10,85 @@ from collections import OrderedDict
 
 import routine # a script with functions
 
-from my_classes import MyClass
+#from my_classes import MyClass
 
 #print(sys.version)
 
 
+#foo = routine.string_or_number('neutral2.bmp')
 
+
+stim = ['control.bmp', 1, 'control.bmp', 'neutral2.bmp',
+        'control.bmp', 'neutral2.bmp', 'control.bmp', 'neutral2.bmp',
+        'control.bmp', 'aaneutral2.bmp']
+print(sorted(list(stim)))
+print()
+print((set(stim)))
+##
+##ab = ["a", 1, "c", "c", "a"]
+##bb= []
+##for el in ab:
+##    if isinstance(el, str): bb.append(1)
+##    else: bb.append(0)
+##
+##    
+##print(all(bb))
+##
+
+#print(any (isinstance(ab,str)))
+
+#print(isinstance(foo, str))
+
+#headers = rderedDict("a": None, "b": None, "c": None)
+#headers = ["a", "b", "c", "c", "a"]
+#headers2 = ["Q", "W"]
+##print(sorted(headers))
+##print(set(headers))
+##
+##od = OrderedDict.fromkeys(headers)
+##
+##fod = "a" in od.keys()
+##
+##print  (fod)
+
+
+##print("aa" == "ab")
+##
+##od = OrderedDict()
+##od['a'] = [1,2,3]
+##od['b'] = None
+##print(od['a'][len(od['a'])-1])
+##od['a'].append(2)
+##
+##
+##print(not od['a'])
+##
+##aa = list([1,1])
+##for el in [2,3]: aa.append(el)
+###aa.append([2,3])
+##
+##a = [10,10]
+###aa.append(10,10)
+##print(aa)
+##
+##print(max(aa))
+##print(len(aa))
+##print(isinstance(1,str))
+
+
+
+#print(os.getcwd() )
+##
+##
+##aa =  not isinstance(headers[0], str)
+##print(aa)
+
+##
+##a = {'numbero': [1,2],  "wordolo": "nuppi"}
+###a = {'numberot': 1, 2, 3, 4, "wordolot": "nuppi", "nappi", "noppi"}
+#intti = float('a')
+##print( min(a['numbero']) )
+##
 
 
 ##
@@ -56,9 +129,9 @@ from my_classes import MyClass
 
 
 
-x = MyClass("gillo")
+#x = MyClass("gillo")
 
-print(x.f())
+#print(x.f())
 
 #print(x.__doc__)
 #round(k*3.14)

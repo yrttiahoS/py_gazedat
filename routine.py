@@ -171,4 +171,14 @@ def manipulate(data, header):
         return null_values_new
 
 
-
+##
+def string_or_number(s):
+    try:
+        z = int(s)
+        return z
+    except ValueError:
+        try:
+            z = float(s)
+            return z
+        except ValueError:
+            return s

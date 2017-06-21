@@ -82,3 +82,4 @@ Disengagement-223-1.gazedata, has strings in
 	*run next time, with check_dataOO_0.1 
 -save all to gitcloud
 	*also copied to C:\Users\infant\Documents\GitHub\archive\py_gazedat_21.6.2017
+	*these now done

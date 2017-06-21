@@ -1,5 +1,7 @@
 import os
 
+import glob
+
 import csv
 
 from collections import OrderedDict # No need to import although GazeReader is
@@ -12,7 +14,8 @@ from itertools import islice
 
 input_file_delimiter = "\t"
 
-null_values = [".", "", "1.#INF", "-1.#INF", "1.#IND", "-1.#IND"] # two possible kinds values for missing samples
+null_values = [".", "", "1.#INF", "-1.#INF", "1.#IND", "-1.#IND", 
+               "-1.#QNAN" , "1.#QNAN", "-"] #  possible kinds values for missing samples
 
 null_values_new = "-999999" #
 
@@ -75,22 +78,25 @@ class GazeReader:
             if not self.maptable:
                 return newrows, data_headers
             
-            # loop file rows and cols,             
+            # loop file rows and cols,
+            bad_row_found = False
             for r, row in islice(enumerate(reader), 0, self._limit_row): #None                
                 newrow = []
                 #loop cols
                 for h, header in enumerate(self.maptable.keys()):#enumerate(header_keys):
-                    ncol = h #od_headers[key]                                    
                     try: #try to accces data element    
-                        foo = row[ncol]    
-                    except(IndexError): #if index oob, use element of previuous row    
-                        foo = newrows[r-1]    
-                        #foo = foo[k]
-    
+                        foo = row[h]    
+                    except(IndexError): #
+                        bad_row_found = True
+                        print (str(row[h]))
+                        break #break out from incomplete row
+                        #foo = newrows[r-1], if index oob, use element of previuous row    
+                    
                     foo = self._manipulate(foo, header)                    
                     newrow.append(foo)
-    
-                newrows.append(newrow)
+                    
+                if not bad_row_found:
+                    newrows.append(newrow)
     
         return newrows, self.maptable.values()#list(header_keys)
 ##
@@ -224,7 +230,7 @@ class DataFolder:
     def __init__(self,
                  path,
                  limit_rows = None,
-                 limit_files = None,
+                 limit_files = (0, None),
                  file_ext = ".gazedata",
                  input_file_delimiter = '\t',
                  map_header = None,
@@ -252,6 +258,7 @@ class DataFolder:
 
         # get list of files            
         self.diritems = os.listdir(path)
+        #self.diritems = glob.glob(os.path.join(path,"*" ,file_ext)) //not work!
         print ("Directory contains " + str(len(self.diritems)) + " files.")
 
         
@@ -269,7 +276,7 @@ class DataFolder:
                 
             writer = csv.writer(outputfile, delimiter=self.file_delimiter)
     
-            for filenum, file in islice(enumerate(self.diritems), 0, self.limit_files): 
+            for filenum, file in islice(enumerate(self.diritems),  self.limit_files[0], self.limit_files[1]): 
                 #print ("Checking file " + str(filenum + 1) + '/' + str(len(diritems)))
                 if file.endswith(self.file_ext):
                     print(os.path.join(self.output_folder, self.output_file))
@@ -295,7 +302,7 @@ class DataFolder:
         _output_file = "data stats and " + self.output_file
 
         # collect statistics from all files in folder    
-        for filenum, file in islice(enumerate(self.diritems), 0, self.limit_files): 
+        for filenum, file in islice(enumerate(self.diritems), self.limit_files[0], self.limit_files[1]): 
             #print ("Checking file " + str(filenum + 1) + '/' + str(len(diritems)))
             if file.endswith(self.file_ext):
                 print(os.path.join(self.output_folder, self.output_file))
@@ -315,6 +322,9 @@ class DataFolder:
                     else:
                         for el in stats:
                             self.folder_level_data[header].append(el)
+                            if isinstance(el, str):
+                                print(header + " has strings")
+                            
                     #!!assign list instead!!!1
 
         #reduce statistical data for outputting                
@@ -344,6 +354,7 @@ class DataFolder:
                 else:
                     out_stats[header] = list(set(self.folder_level_data[header]))
                 print(header + " has strings")
+         
                 #out_values += str(list(set(self.folder_level_data[header]))) + "/t"
 
         # do the writing

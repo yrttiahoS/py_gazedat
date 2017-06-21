@@ -18,12 +18,31 @@ import routine # a script with functions
 #foo = routine.string_or_number('neutral2.bmp')
 
 
-stim = ['control.bmp', 1, 'control.bmp', 'neutral2.bmp',
-        'control.bmp', 'neutral2.bmp', 'control.bmp', 'neutral2.bmp',
-        'control.bmp', 'aaneutral2.bmp']
-print(sorted(list(stim)))
-print()
+stim = ['control.bmp', 'neutral2.bmp', 'control.bmp', 'neutral2.bmp']
+
+##stim = ['control.bmp', 1, 'control.bmp', 'neutral2.bmp',
+##        'control.bmp', 'neutral2.bmp', 'control.bmp', 'neutral2.bmp',
+##        'control.bmp', 'aaneutral2.bmp']
+##
+##
+##print(sorted(list(stim)))
+##print()
 print((set(stim)))
+
+print(len(stim))
+
+od  = OrderedDict()
+od['masa']= stim
+
+print(len(od['masa']))
+
+print(os.path.join ("aa", "bb"))
+
+limit_files = [0, None]
+
+limit_files.append([])
+print(str(limit_files))
+
 ##
 ##ab = ["a", 1, "c", "c", "a"]
 ##bb= []

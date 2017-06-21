@@ -48,3 +48,37 @@ C:\Users\Public\Documents\Tampereen yliopisto\Eye tracker\Aaltonen17\headers_in_
 -I made a working version of check_dataOO_0.1.py
 
 -Include -1.#QNAN and 1.#QNAN to "null values"
+
+
+21.6.2017
+-check_dataOO_0.1.py and DataFolder.write_stats_to_file() still output too 
+ many values as statistics (should be min,max or list of strings)
+*it interprets numerical values as strings and thus "cannot" extract min,max
+*-1.#QNAN and 1.#QNAN were not included in "null value" list, 
+  try running script now with this improvement, does work:?	
+
+#about_68
+Disengagement273-320-289-1.gazedata, has strings in 
+	XGazePosRightEye
+	Reason: last datacolumn ID=61353, 
+		is incomplete and has "-" instead of numerical value for this col
+	Solutions:
+		a) read/convert "-" to null
+		b) don't read incomplete data rows, in myclasses.GazeReader
+		try: #try to accces data element    
+                        foo = row[ncol]    
+                    except(IndexError): #if index oob, use element of previuous row    
+                        break #break out from incomplete row		
+
+#about_19
+Disengagement-223-1.gazedata, has strings in 
+	DistanceRightEye
+	Reason: last datacolumn ID=61353, 
+		is incomplete and has "-" instead of numerical value for this col
+
+-I chose to include "-" in the list of "null" values
+-for extractinf gazedata min,max and string lists for all headers,
+	the code should now work for treC2data!
+	*run next time, with check_dataOO_0.1 
+-save all to gitcloud
+	*also copied to C:\Users\infant\Documents\GitHub\archive\py_gazedat_21.6.2017

@@ -1,3 +1,5 @@
+from datetime import datetime, date
+
 import os
 
 import csv
@@ -10,6 +12,77 @@ from collections import OrderedDict
 
 import routine # a script with functions
 
+import numpy as np
+
+from my_classes import GazeReader
+
+
+print(str( not[]))
+##
+##
+##
+##with open(os.path.join(os.getcwd(), "tiste_file.txt"), "wt", newline = "\n") as outputfile:
+##            writer = csv.writer(outputfile, delimiter="\t")
+##            writer.writerow( ["guuguu", "geegee"] )
+##            writer.writerow( ["guuguu 2",] )
+##
+
+
+
+#args_pro = 'D:\\lasayr\\Aaltonen\\mi', '353_4.gazedata', None
+        
+# make new GazeReader object for reading and processing input file
+##f_processor = GazeReader(args_pro) #40 is optional limit for rows
+##print(f_processor.get_filename())
+##hh = f_processor.get_headers()
+##
+##print(hh)
+##
+##hh_num=[]
+##tets=[]
+##print(len(tets))
+##
+##for i in range(10):
+##    print("duck")
+
+##for header in hh:
+##    print(header)
+##    hh_num.append(routine.string_or_number(header))
+##    tets.append(isinstance(hh_num[-1], str)) #[-1] is the last element...!
+##
+##
+##
+##
+##print("is strin:" + str(tets))#isinstance(hh[0], str))
+##
+##print("all headers are string:" + str(all(tets)))
+##a = [1, 2, 3]
+##
+##print(a)
+##print(np.percentile(a , 50))
+##
+##
+##start_time = date.today()
+##print(start_time   )
+
+#returns the elapsed milliseconds since the start of the program
+##def millis(start_time):
+##    dtn = datetime.now()
+##    print(dtn)
+##    dt = dtn - start_time
+##
+##    print(dt)
+##    mus =(dt.days * 24 *60 *60 + dt.seconds) * 1000 + dt.microseconds 
+##    ms = mus / 1000
+##    s = mus / (1000*1000/1)
+##    minutes = mus /(1000*1000*60)
+##         
+##    return ms, s, minutes
+##
+##for i in range(1,10^9990):
+##    10^i
+##
+##print( str(millis(start_time)))
 #from my_classes import MyClass
 
 #print(sys.version)
@@ -18,7 +91,7 @@ import routine # a script with functions
 #foo = routine.string_or_number('neutral2.bmp')
 
 
-stim = ['control.bmp', 'neutral2.bmp', 'control.bmp', 'neutral2.bmp']
+#stim = ['control.bmp', 'neutral2.bmp', 'control.bmp', 'neutral2.bmp']
 
 ##stim = ['control.bmp', 1, 'control.bmp', 'neutral2.bmp',
 ##        'control.bmp', 'neutral2.bmp', 'control.bmp', 'neutral2.bmp',
@@ -27,21 +100,7 @@ stim = ['control.bmp', 'neutral2.bmp', 'control.bmp', 'neutral2.bmp']
 ##
 ##print(sorted(list(stim)))
 ##print()
-print((set(stim)))
 
-print(len(stim))
-
-od  = OrderedDict()
-od['masa']= stim
-
-print(len(od['masa']))
-
-print(os.path.join ("aa", "bb"))
-
-limit_files = [0, None]
-
-limit_files.append([])
-print(str(limit_files))
 
 ##
 ##ab = ["a", 1, "c", "c", "a"]

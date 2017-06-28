@@ -4,13 +4,15 @@ import glob
 
 import csv
 
-from collections import OrderedDict # No need to import although GazeReader is
+from collections import OrderedDict
 
 import routine
 
-#initialized with an OrderedDict (!)
-
 from itertools import islice
+
+import numpy as np
+
+from datetime import date
 
 input_file_delimiter = "\t"
 
@@ -50,7 +52,7 @@ class MyClass:
 class GazeReader:
     """A class for Reading and processing gazedata"""
 
-    def __init__(self, t_args, limit = None ):
+    def __init__(self, t_args, limit = None, percentiles = (1,99) ):
         self.input_folder = (t_args[0]) 
         self.input_file = (t_args[1])
         self.maptable = (t_args[2]) #OrderedDict where key is old and value new header
@@ -61,6 +63,10 @@ class GazeReader:
         self.data_headers = datheaders
 
         self.data_od = {}#OrderedDict()
+
+        #percentile points for extracting nearly min-max range of gazedata values
+        self.lo_perc = percentiles[0] 
+        self.hi_perc = percentiles[1]
         
         self.r_ind = -1
             
@@ -71,7 +77,20 @@ class GazeReader:
         
             # grab header information, into a list
             data_headers = next(reader) #reader.__next__() 
-                
+
+            # check if headers are numerical (or strings that can
+            # be converted to numbers)
+            headers_numform=[]
+            truly_strings=[]
+            for header in data_headers:                
+                #convert header to num if possible
+                headers_numform.append(routine.string_or_number(header))
+                #check if header remained a string
+                truly_strings.append(isinstance(headers_numform[-1], str)) #[-1] is the last element...!
+            #if no good headers (i.e., strings) make headers empty                
+            if not all(truly_strings):
+                data_headers = []
+                                
             #data rows storage for this function            
             newrows = []
 
@@ -88,7 +107,7 @@ class GazeReader:
                         foo = row[h]    
                     except(IndexError): #
                         bad_row_found = True
-                        print (str(row[h]))
+                        #print (str(row[h]))
                         break #break out from incomplete row
                         #foo = newrows[r-1], if index oob, use element of previuous row    
                     
@@ -101,16 +120,22 @@ class GazeReader:
         return newrows, self.maptable.values()#list(header_keys)
 ##
     def get_data_stats(self, header_key):
-    # returns min, max of number, or unique of strings of variable
+    # returns ~min, ~max of number (actually lo/hi percentiles)
+    # or unique of strings of variable
     # uses OrderedDict self.data_od as main data structure
     # header_key is used to index specific variable
-    
+
+        if not header_key:
+            return []
+            
         # initialize data if not alreadey            
         if not self.data_od:
             self._odictionarize_data()
 
         # list of statistics from the current file/variable
         stats_file = self.data_od[header_key]
+        if not stats_file:
+            return []
 
         # check if variable includes string values
         stats_include_str = []
@@ -121,8 +146,8 @@ class GazeReader:
 
         # extract min, max of numerical values
         if not stats_include_str:
-            min_value = min(self.data_od[header_key])
-            max_value = max(self.data_od[header_key])
+            min_value = np.percentile(self.data_od[header_key] , self.lo_perc) #min(self.data_od[header_key])
+            max_value = np.percentile(self.data_od[header_key] , self.hi_perc)
             return_value = [min_value, max_value]
         # extract unique strings (no duplicates)
         else:
@@ -153,35 +178,43 @@ class GazeReader:
             #initialize od with headers as keys
             self.data_od = OrderedDict.fromkeys(headers) 
                 
-            # loop file rows and cols,             
+            # loop file rows and cols,
+            bad_row_found = False
             for r, row in islice(enumerate(reader), 0, self._limit_row): 
                 newrow = []
                 # loop cols
                 for h, header in enumerate(self.data_od.keys()):
-                    ncol = h 
                     try: # try to accces data element    
-                        foo = row[ncol]    
-                    except(IndexError): #i f index oob, use element of previuous row    
-                        d = self.data_od[header]       
-                        foo = d[len(d)-1]
+                        foo = row[h]    
+                    except(IndexError): #if index oob, use element of previuous row    
+                        bad_row_found = True
+                        #print (str(row[h]))
+                        break #break out from incomplete row
+                        #d = self.data_od[header]       
+                        #foo = d[-1]
 
                     # process data value    
                     foo = self._manipulate(foo, header)
                     # convert to number if possible
                     foo = routine.string_or_number(foo)
                     # initialize variable or append new value
-                    if not self.data_od[header]:
-                        self.data_od[header] = [foo]
-                    else:
-                        self.data_od[header].append(foo)
+                    if not bad_row_found:
+                        if not self.data_od[header]:
+                            self.data_od[header] = [foo]
+                        else:
+                            self.data_od[header].append(foo)
                     
           
 ##        
     def set_row_limit(self, number):
     # set limit for how may rows will be read from input file
         self._limit_row = number
-        
-        
+
+    def set_percentiles(self, lo_percentile, hi_percentile):
+    # set percentiles for very low and high data values
+        self.lo_perc = lo_percentile 
+        self.hi_perc = hi_percentile
+    
     def _manipulate(self, data, header):            
     # manipulate data
     # more manipulations could be included...
@@ -199,6 +232,10 @@ class GazeReader:
         else:            
             return null_values_new
 
+
+    def get_filename(self):        
+    # returns the file being read/processed
+        return self.input_file
 
     def get_row_count(self):        
     # returns the number of rows read and stored
@@ -247,6 +284,7 @@ class DataFolder:
         self.headers_folder = os.getcwd() # folder of header transform map
 
         self.folder_level_data = OrderedDict() # data from all files in folder
+        self.out_stats = OrderedDict() #extracted descriptive stat
 
         # for investigating file headers
         # if no header map is provided, the aim is to
@@ -254,7 +292,8 @@ class DataFolder:
         if not self.map_header:
             folder_path = os.path.split(self.dirpath)
             folder_tail = folder_path[1]            
-            self.output_file = ( "headers in " + folder_tail + ".txt")
+            self.output_file = ( "headers in " + folder_tail + "_" +
+                                 str(date.today()) + ".txt")
 
         # get list of files            
         self.diritems = os.listdir(path)
@@ -272,7 +311,8 @@ class DataFolder:
     def write_headers_to_file(self):
     # function for storing into outputfile headers used in files in the folder
 
-        with open(os.path.join(self.output_folder, self.output_file), "wt") as outputfile:
+        with open(os.path.join(self.output_folder, self.output_file),
+                  "wt", newline = "\n") as outputfile:
                 
             writer = csv.writer(outputfile, delimiter=self.file_delimiter)
     
@@ -295,8 +335,8 @@ class DataFolder:
                     writer.writerow( row_list_to_write )
 
 ##
-    def write_stats_to_file(self):
-    # function for summarizing variable scales, with min-max or string tags
+    def write_stats_to_file(self, percentiles):
+    # function for summarizing variable scales, with min,max or string tags
 
         # make specific output file with this function
         _output_file = "data stats and " + self.output_file
@@ -313,9 +353,10 @@ class DataFolder:
                 args_pro = self.dirpath, file, self.map_header
         
                 # make new GazeReader object for reading and processing input file
-                f_processor = GazeReader(args_pro, self.limit_rows) #40 is optional limit for rows
-        
+                f_processor = GazeReader(args_pro, self.limit_rows, percentiles) #40 is optional limit for rows
+
                 for header in f_processor.get_headers():
+                    #print("header: " + header)
                     stats = f_processor.get_data_stats(header)
                     if header not in self.folder_level_data.keys():
                         self.folder_level_data[header] = stats
@@ -328,13 +369,15 @@ class DataFolder:
                     #!!assign list instead!!!1
 
         #reduce statistical data for outputting                
-        out_stats = OrderedDict()
+        #self.out_stats  already defined at __init__()
 
         ##        
         # loop through variables/headers      
         for header in self.folder_level_data.keys():
             stats_folder = self.folder_level_data[header]
 
+            if not stats_folder: continue
+            
             # check if variable includes string values
             stats_include_str = []
             for stat in stats_folder:
@@ -345,27 +388,33 @@ class DataFolder:
             if not any(stats_include_str):
                 min_value = min(self.folder_level_data[header])
                 max_value = max(self.folder_level_data[header])
-                out_stats[header] = min_value, max_value
+                self.out_stats[header] = min_value, max_value
                 
             # extract unique strings
             else:
                 if all(stats_include_str):
-                    out_stats[header] = sorted(list(set(self.folder_level_data[header])))
+                    self.out_stats[header] = sorted(list(set(self.folder_level_data[header])))
                 else:
-                    out_stats[header] = list(set(self.folder_level_data[header]))
+                    self.out_stats[header] = list(set(self.folder_level_data[header]))
                 print(header + " has strings")
          
-                #out_values += str(list(set(self.folder_level_data[header]))) + "/t"
 
         # do the writing
-        with open(os.path.join(self.output_folder, _output_file), "wt") as outputfile:
+        with open(os.path.join(self.output_folder, _output_file),
+                  "wt", newline = "\n") as outputfile:
             writer = csv.writer(outputfile, delimiter=self.file_delimiter)
-            writer.writerow( out_stats.keys() )
-            writer.writerow( out_stats.values() )
+            writer.writerow( self.out_stats.keys() )
+            writer.writerow( self.out_stats.values() )
 
  ##                       
+    def get_headers(self):        
+        # returns list of headers
+        return self.out_stats.keys()
 
-                    
+    def get_stats(self, header):
+        #return stats of specific variable
+        return self.out_stats[header]
+                        
                                                  
                         
                     

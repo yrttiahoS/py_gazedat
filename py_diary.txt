@@ -69,6 +69,11 @@ Disengagement273-320-289-1.gazedata, has strings in
                         foo = row[ncol]    
                     except(IndexError): #if index oob, use element of previuous row    
                         break #break out from incomplete row		
+		EDIT 28.6.2017: 
+			*breaking from IndexError was not used in method: _odictionarize_data(self)
+			*it was only used in method: read_data
+			*now, update also _odictionarize_data...
+			
 
 #about_19
 Disengagement-223-1.gazedata, has strings in 
@@ -82,4 +87,52 @@ Disengagement-223-1.gazedata, has strings in
 	*run next time, with check_dataOO_0.1 
 -save all to gitcloud
 	*also copied to C:\Users\infant\Documents\GitHub\archive\py_gazedat_21.6.2017
-	*these now done
+
+22.6.2017
+-I ran code check_dataOO_0.1 to get datavalues in "tre5mo_old" data
+*code ran through ok
+*values contained some crude outliers that mask the range of more "typical values"
+	**outliers probably larger than 99. percentile?
+*I updated the my_classes.GazeReader.get_data_stats 
+	**now uses numpy.percentile(n , p)
+	**percentiles now also in GazeReader constructor i.e., init()
+	**percentiles passed from check_dataOO_0.1 to Datafolder.write_stats_to_file(p) to GazeReader.init()
+*try...works	
+
+-ran check_dataOO_0.1 on tre5mo_old, time 0:14:07.518289
+-ran check_dataOO_0.1 on tre7mo_old, time 0:14:39.264345
+
+
+26.6.2017
+-how to run check_dataOO_0.1 on malawi data, where headers missing in some files?
+	**update GazeReader to check if string headers can be found
+		if not, throw exception, 
+			no exception, just return empty list [] for headers missing
+ 		handle exceptions in DataFolder?
+			no need? DataFolder loops through headers, if no headers -> nothing done?
+		you can analyze files without headers later, when new versions with headers are made...
+			good idea, headless ;) data found in headers in mi_26.6.2017.txt
+*I completed the above updates into my_classes.py (GazeReader class)
+
+-ran check_dataOO_0.1 on mi, time 0:39:04.459314
+
+27.6.2016
+-the class DataFolders can write statistics to file with write_stats_to_file(self, percentiles), 
+ but it would be useful to have get method(s) for acquiring stats from the object
+*don't return all, instead return classy one "scalar" at time,
+ all headers could be returned as a "catalogue" or "list of contents"...
+*OK: I made these updates into my_classes
+
+-make script that output folder level stats from many folders
+*name: check_data_multi.py
+*uses class DataFolder like check_dataOO_0.1 
+
+28.6.2017
+-there were some problems with tre24mo data, with GazeReader and DataFolders,
+ because some headers or data were empty []
+*I fixed with returnings from methods or continue of loop in such cases
+*program ran through
+
+-there is some problem with output file: ValueError: I/O operation on closed file.
+*check_data_multi.py", line 53
+*opening, closing, and writing csv: improve these things!

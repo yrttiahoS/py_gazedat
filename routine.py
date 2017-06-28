@@ -182,3 +182,15 @@ def string_or_number(s):
             return z
         except ValueError:
             return s
+
+##
+from datetime import datetime
+from datetime import timedelta
+
+start_time = datetime.now()
+
+#returns the elapsed milliseconds since the start of the program
+def millis(start_time):
+    dt = datetime.now() - start_time
+    ms = (dt.days * 24 *60 *60 + dt.seconds) * 1000 +dt.microseconds / 1000
+    return ms          

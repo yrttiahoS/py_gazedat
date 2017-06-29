@@ -16,8 +16,8 @@ import numpy as np
 
 from my_classes import GazeReader
 
-
-print(str( not[]))
+if 1:
+    print(str( not[]))
 ##
 ##
 ##

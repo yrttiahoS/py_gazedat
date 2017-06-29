@@ -98,7 +98,6 @@ class GazeReader:
                 return newrows, data_headers
             
             # loop file rows and cols,
-            bad_row_found = False
             for r, row in islice(enumerate(reader), 0, self._limit_row): #None                
                 newrow = []
                 #loop cols
@@ -106,15 +105,11 @@ class GazeReader:
                     try: #try to accces data element    
                         foo = row[h]    
                     except(IndexError): #
-                        bad_row_found = True
-                        #print (str(row[h]))
-                        break #break out from incomplete row
-                        #foo = newrows[r-1], if index oob, use element of previuous row    
+                        #print("bad row: " + str(r) + " for: " + header)
+                        foo = []
                     
                     foo = self._manipulate(foo, header)                    
                     newrow.append(foo)
-                    
-                if not bad_row_found:
                     newrows.append(newrow)
     
         return newrows, self.maptable.values()#list(header_keys)
@@ -135,6 +130,7 @@ class GazeReader:
         # list of statistics from the current file/variable
         stats_file = self.data_od[header_key]
         if not stats_file:
+            print("no data for: " + header_key)
             return []
 
         # check if variable includes string values
@@ -179,30 +175,25 @@ class GazeReader:
             self.data_od = OrderedDict.fromkeys(headers) 
                 
             # loop file rows and cols,
-            bad_row_found = False
             for r, row in islice(enumerate(reader), 0, self._limit_row): 
                 newrow = []
                 # loop cols
                 for h, header in enumerate(self.data_od.keys()):
                     try: # try to accces data element    
                         foo = row[h]    
-                    except(IndexError): #if index oob, use element of previuous row    
-                        bad_row_found = True
-                        #print (str(row[h]))
-                        break #break out from incomplete row
-                        #d = self.data_od[header]       
-                        #foo = d[-1]
+                    except(IndexError): #if index oob, use element of previuous row                                                
+                        #print("bad row: " + str(r) + " for: " + header)
+                        foo = []
 
                     # process data value    
                     foo = self._manipulate(foo, header)
                     # convert to number if possible
                     foo = routine.string_or_number(foo)
                     # initialize variable or append new value
-                    if not bad_row_found:
-                        if not self.data_od[header]:
-                            self.data_od[header] = [foo]
-                        else:
-                            self.data_od[header].append(foo)
+                    if not self.data_od[header]:
+                        self.data_od[header] = [foo]
+                    else:
+                        self.data_od[header].append(foo)
                     
           
 ##        
@@ -219,8 +210,12 @@ class GazeReader:
     # manipulate data
     # more manipulations could be included...
     
-        # take away the null-values if they exist    
+        
         foo = data
+
+        if not foo: return null_values_new
+        
+        # take away the null-values if they exist    
         if foo not in null_values: 
             if header in x_coord: #['LEFT_GAZE_X', 'RIGHT_GAZE_X']:
                 foo = float(foo) / screen_x_dim#newrow.append(float(foo) / screen_x_dim) #newrow.append(float(row[ncol]) / 1920.0)
@@ -319,7 +314,7 @@ class DataFolder:
             for filenum, file in islice(enumerate(self.diritems),  self.limit_files[0], self.limit_files[1]): 
                 #print ("Checking file " + str(filenum + 1) + '/' + str(len(diritems)))
                 if file.endswith(self.file_ext):
-                    print(os.path.join(self.output_folder, self.output_file))
+                    #print(os.path.join(self.output_folder, self.output_file))
                     print ("Process file " + str(filenum + 1) + '/' + str(len(self.diritems)))
                     print(file)
 
@@ -345,7 +340,7 @@ class DataFolder:
         for filenum, file in islice(enumerate(self.diritems), self.limit_files[0], self.limit_files[1]): 
             #print ("Checking file " + str(filenum + 1) + '/' + str(len(diritems)))
             if file.endswith(self.file_ext):
-                print(os.path.join(self.output_folder, self.output_file))
+                #print(os.path.join(self.output_folder, self.output_file))
                 print ("Process file " + str(filenum + 1) + '/' + str(len(self.diritems)))
                 print(file)
 
@@ -363,8 +358,8 @@ class DataFolder:
                     else:
                         for el in stats:
                             self.folder_level_data[header].append(el)
-                            if isinstance(el, str):
-                                print(header + " has strings")
+                            #if isinstance(el, str):
+                                #print(header + " has strings")
                             
                     #!!assign list instead!!!1
 
@@ -396,7 +391,7 @@ class DataFolder:
                     self.out_stats[header] = sorted(list(set(self.folder_level_data[header])))
                 else:
                     self.out_stats[header] = list(set(self.folder_level_data[header]))
-                print(header + " has strings")
+                #print(header + " has strings")
          
 
         # do the writing

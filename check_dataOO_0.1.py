@@ -12,7 +12,7 @@ tre7mo_testin = "C:\\Users\\Public\\Documents\\Tampereen yliopisto\\Eye tracker\
 tre7mo_old = "C:\\Users\\Public\\Documents\\Tampereen yliopisto\\Eye tracker\\TRE Cohort 2\\gazeAnalysisLib analyses\\7mo,trec2"
 mi = ("D:\\lasayr\\Aaltonen\\mi") #+ folder_name)
 
-folder_path = tre7mo_testin
+folder_path = tre7mo_old
 
 # create new DataFolder to be inspected/processed, limit_files = (19,20) or (0, None)
 data_folder = DataFolder(folder_path, limit_rows = 100)#, limit_files = (1,20))

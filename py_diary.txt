@@ -136,3 +136,46 @@ Disengagement-223-1.gazedata, has strings in
 -there is some problem with output file: ValueError: I/O operation on closed file.
 *check_data_multi.py", line 53
 *opening, closing, and writing csv: improve these things!
+*EDIT 29.6.2017, this bug fixed
+	**now outputfile is opened and closed "raw", ie., not using "with" or "try"
+
+29.6.2017
+-I now have version of check_data_multi.py, which runs through with limited
+ data input (rowlimit)
+*try running with all data now!
+*check_data_multi now ran through, in 1:48, hours:minutes
+*output moved to C:\Users\Public\Documents\Tampereen yliopisto\Eye tracker\Aaltonen17\py_stats
+
+-excel file for comparing headers and stats from different folders
+*Headers and data in sites.xlsx
+*e.g., compare "old" and "new" data from 5mo,24mo TRE
+
+-some folders had "crazy" data:
+tre24mo_old and new:	UserDefined_1	Stim TrialId	Target
+ct_6mo: all vars!
+ct_18mo: all vars!
+hki:	nudged_transform_l (string, while should be numerical), stim (numerical data, what pictures?)
+*in ct, Cape Town, data there are empty values 
+	**empty values cause immediately expection in data acquisition,
+	**this is handled harshely with "break", 
+		thus if file starts with empty data, nothing will be read!
+	**try a more flexible appoarch, eg., just "continue" to next row
+		***still softer/flexible is to assign empty [] if no data could be read
+		***"assign empty" works
+*now that "bug" - stop data acquisition - is fixed, run stats on tre24mo and ct data
+*Warning (from warnings module):
+  	File "C:\Python Spyder\python-3.5.3.amd64\lib\site-packages\numpy\lib\function_base.py", line 3834
+	    RuntimeWarning)
+	RuntimeWarning: Invalid value encountered in percentile
+**this didn't stop RUN though!
+
+-stats extracted 
+*outfiles now in: C:\Users\Public\Documents\Tampereen yliopisto\Eye tracker\Aaltonen17\py_stats
+*script: check_data_multi.py
+*input folders
+	folders['tre24mo_old'] = "C:\\Users\\Public\\Documents\\Tampereen yliopisto\\Eye tracker\\TRE Cohort 2\\gazeAnalysisLib analyses\\24mo, trec2"
+	folders['tre24mo_new'] = "D:\\lasayr\\Aaltonen\\24mo"
+	folders['ct_6mo'] = "D:\\lasayr\\Aaltonen\\ct\\6mo"
+	folders['ct_18mo'] = "D:\\lasayr\\Aaltonen\\ct\\18mo"
+*results now make sense, and are not blocked by break or continue statements
+

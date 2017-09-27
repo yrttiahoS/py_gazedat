@@ -16,8 +16,37 @@ import numpy as np
 
 from my_classes import GazeReader
 
-if 1:
-    print(str( not[]))
+input_folder = "C:\\Users\\Public\\Documents\\Tampereen yliopisto\\Eye tracker\\TRE Cohort 2\\gazeAnalysisLib analyses\\7mo,trec2"
+#input_folder = "C:\\Users\\Public\\Documents\\Tampereen yliopisto\\Eye tracker\\TRE Cohort 2\\gazeAnalysisLib analyses\\testing 7mo,trec2"
+#print(os.path.isdir(input_folder))
+#os.mkdir("C:\\Users\\Public\\Documents\\Tampereen yliopisto\\Eye tracker\\TRE Cohort 2\\gazeAnalysisLib analyses\\50-years visit\\")
+
+allFIlenames =os.listdir(input_folder)
+print(len(allFIlenames))
+fileNames = [fileName for fileName in os.listdir(input_folder) if fileName.endswith(".gazedata")]
+print(len(fileNames))
+
+a = "stringi1"
+b = "stringi2"
+if a == b:
+    print("samat")
+else:            
+    print("eri")
+
+##folder_path = os.path.split("C:/lasayr/file.txt")
+##folder_tail = folder_path[1]            
+##print(folder_tail)
+##
+##i = folder_tail.find('.')
+##print(folder_tail[0:i])
+##print(folder_tail[i])
+##
+##a=1
+##while a <= 3:
+##    print(a)
+##    a += 1
+##    
+##
 ##
 ##
 ##

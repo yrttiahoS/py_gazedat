@@ -15,7 +15,7 @@ mi = ("D:\\lasayr\\Aaltonen\\mi") #+ folder_name)
 folder_path = tre7mo_old
 
 # create new DataFolder to be inspected/processed, limit_files = (19,20) or (0, None)
-data_folder = DataFolder(folder_path, limit_rows = 100)#, limit_files = (1,20))
+data_folder = DataFolder(folder_path, limit_rows = 100, limit_files = (2600,2600+10))
 
 # target output to current working directory, cwd
 data_folder.set_output_folder(os.getcwd())

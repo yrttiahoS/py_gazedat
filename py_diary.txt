@@ -179,3 +179,214 @@ hki:	nudged_transform_l (string, while should be numerical), stim (numerical dat
 	folders['ct_18mo'] = "D:\\lasayr\\Aaltonen\\ct\\18mo"
 *results now make sense, and are not blocked by break or continue statements
 
+30.6.2017
+-I have updated Headers and data in sites.xlsx
+*headers, stats, explanations of data columns
+*header match to TreC2 headers
+*some Tobii manual descriptions	(Tobii Studio User’s Manual Version 3.4.5)
+
+
+17.8.2017
+-I need to figure out which headers to use for all gazedata
+*initial plan is to use headers from TRE Cohort 2
+
+-What code to use for disengagement analyses
+*clone Akselin Palén
+ git clone git://github.com/axelpale/gazelledb
+**this is not similar to Jussi Kaatiala's disengagment analyses in Matlab?!
+*use C:\Users\infant\Documents\MATLAB\igazelib\gazeAnalysisLib1_07_4
+**use it for disengagment analyses!
+*the main script will be base on
+	disengagementAnalysis_TETTime.m
+*new file: C:\Users\infant\Documents\MATLAB\igazelib II\1stSigns\dise1stSigns_1.m
+	
+-How to make Matlab classes?
+*my earlier use of classes in .m
+	**C:\Users\infant\Documents\MATLAB\ASD\badEpochs.m
+*make simple classes for testing and fun
+	**eg. progam for asking arithemtic questions
+		**class: asker - this ask questions on command line, gets the right answer from calculator
+		**class: calculator - does just calculation and returns the results
+
+
+8.9.2017 
+-I need to write standardizeGazedata_0.1.py for reading, modifying and re-writing gazedata
+*this will have some algorithms from
+gazedata2gazedata_sy3.py and the like, but should use classes in my_classes.py
+*use DataFolder class to access all gazefiles in folder
+	**write new method for writing new data into folder
+		*method will loop through files, i.e., GazeReader objects
+		*method will read (gettinf from GazeReader), 
+			    change (by accessing separate textfile),
+				 and write headers to new file (use writer object?)
+		*method will read, change, and write datarow one-by-one into new file,
+			same logic as with headers, changing might be more tricky?
+		*i.e., GazeReader will never have to give up entire data!
+
+14.9.2017
+-standardizeGazedata_0.1.py runs through but no output file can be found!
+edit:output files in "default" folder specificied in my_classes' DataFolder class!
+
+15.9.2017
+-standardizeGazedata_0.1.py runs through, output files in "default" folder 
+ specificied in my_classes' DataFolder class!
+-GazeReader can now omit columns, for headers decared my_classes.OBSOLETE_HEADER = "OBSOLETE"
+ *header and column skipped in reading data
+ *thus these will not be writtern with DataFolder.rewrite_data() method
+-GazeReader can process data in two ways
+	*with HeaderMap -> ideal for rewriting data with known headers
+	*without HeaderMap -> ideal for Bottom-up reading, and data-analysis when headers and
+ 		data formats are not known
+
+27.9.2017
+-standardizeGazedata_0.1.py should be generalized to accommodate random order
+ of headers and columns
+*use two header maps: one for "model data"=Trecohort2_7mo, one for each particular datafolder/type,
+ eg. Malawi, Cape Town
+
+
+28.9.2017
+-I wrote generalized update standardizeGazedata_0.2.py
+*also my_classes.py has been updated extensively (old version stored in GitHub)
+
+-an alternative tactic for header mapping
+*make a conversion table where 1st col is for ALL HEADERS AVAILABLE and Second is for 
+ desired STANDARD headers, 3rd is for Standard/desired column number
+*check that the mapping is unique!
+
+-remove some columns as OBSOLETE also from TRE data
+
+-order rewritten output to have headers in specified order
+-don't include headers in rewritten version if such data is not in input gazefile
+
+-'header map.xls' now contains header map comprising ALL HEADERs
+*use headers named by KEYS, value is NOT OBSOLETE, and match found for KEY in current dataheaders 
+ 
+
+16.10.2017
+-maybe some headers/datacolumns could be dropped off from standaridized data
+*already these are marked OBSOLETE:
+AOI
+?time
+Time1
+Time2
+*consider these as well
+RTTime
+CursorX
+CursorY
+TimestampSec
+TimestampMicrosec
+*make these changes into: "header map 3D.txt"
+**keep old as "header map 3D_old.txt"
+
+-make folder-specific conversion maps for 
+ data values, eg., map numeric stimulus codes into strings
+*needed for TRE24mo data
+
+-How to include MW (Malawi) headers in files with missing data?
+*e.g., file 107_4_std.gazedata in MW data has missing headers
+*my_classes.Gazereader class has private method _read_data(),
+ which normally reads headers as the first row of input file
+ **it detects if headers are missing, (if first row is not all strings)
+ **if no headers it just assigns [] to data_headers variable; this is actually Matlab, right ;) 
+								should be "" instead...?
+ **instead have a new method that reads headers from 
+   a separete, folder-specific, header file
+
+
+*files with missing, 
+file 13/827: 107_4.gazedata 
+file 26/827: 113_4.gazedata
+file 37/827: 119_4.gazedata
+file 38/827: 119_5.gazedata
+file 40/827: 11_5.gazedata
+file 95/827: 147_5.gazedata
+etc.
+
+-reading headers with my_classes.Gazereader class has private method _read_data()
+ seems to work, but first data row will be lost with current way of doing this
+ *is it possible to back-track csv-reader, or to store the first line for later 
+ use as a dataline 
+*EDIT 17.10.2017: the first data row can be read anew by calling: inputfile.seek(0) ,
+	where inputfile is the "data" for reader = csv.reader(inputfile, delimiter = input_file_delimiter)
+
+
+17.10.2017
+-make method _manipulate() to change numeric stimcodes in tre24mo data to string values 
+ with some kind of a map, codes are disclosed in Headers and data in sites_v3.xlsx
+*this mapping of numerical codes into strings now completed in my_classes.GazeReader
+ **1&2 -> "fearful.bmp", etc
+
+-update Matlab script to accommodate new standardized headers
+ *total 41 headers as in 'header map.xlsx'
+ *not all are necessary for disengagement analyses though
+ 
+-there is bug in finding columns for data in GazeReader._read_data
+*it finds both adequate data columns in input data and finds no columns at all,
+ because header map has both matchin and mismatching keys, 
+*only matching keys should be used, if match is found mismatching keys should not be used anymore
+*solution: if some datacell has been inserted to specific columnIndex, EMPTY_STRING should not 
+ be inserted anymore (or any other value for that matter...)
+**this solution seemed to fix the problem
+
+-now run all data from TREC2 and test with igazelib code
+
+19.10.2017
+-headers are same for CapeTown (ct) and Malawi (mi, or mw) data
+*copy header file from Malawi data to ct data
+
+-my_classes.DataFOlder now has date_limit paramter, you can exlude files
+ older than parameter value 
+EDIT 6.11.2017, the date is read as "Date created" -which may correspond to
+ 		date the file was created *locally*, may be different from 
+		the date the file was originally saved with e.g., some other computer.
+		This "date created" is however useful for the purpose where one downloads
+		new files and only wants to process the most recent ones.
+
+24.10.2017
+-I processed more standard CT data to 
+D:\lasayr\Aaltonen\6mo_std
+with standardizeGazedata_0.2.py
+*rename folder to D:\lasayr\Aaltonen\ct_6mo_std
+
+-run data from D:\lasayr\Aaltonen\ct\18mo
+*rename D:\lasayr\Aaltonen\ct\ct_18mo
+to
+D:\lasayr\Aaltonen\ct_18mo_std
+*ok, done
+
+3.11.2017
+-I standardized Malawi data from
+*input_folder = "D:\\lasayr\\Aaltonen\\mi"
+ to
+ output_folder = "D:\\lasayr\\Aaltonen\\" + inFolderUnique + "_std"
+*Maybe change this into "mw" for Malawi
+
+
+6.11.2017
+-Standardize TREC2 24mo data
+*to D:\lasayr\Aaltonen\24mo,trec2_std
+*I made standarization script read correctly LateralStimPosition 
+ and to convert numerical codes to "left/right" string
+
+-gazedata headers explained in:
+C:\Users\Public\Documents\Tampereen yliopisto\Eye tracker\Aaltonen17\headers_in_sites_explained.xlsx
+
+
+8.3.2018
+-I installed Anconda
+
+
+1.8.2018
+-In my_classes, anonymization was accidentally hard coded to be always on
+*I fixed this to make it parameterized
+
+-Date-based filter for file selection was previously based on "Date created"
+* i.e., itemCreated = os.path.getctime(self.dirpath + '\\' + item)	
+* I changed this to "Date modified":
+	itemModified = os.path.getmtime(self.dirpath + '\\' + item)
+**reason: "Date modified" is assigned when gazedata is stored from eye tracking and 
+	stays intanct when file is moved to different storage system/computer disk
+
+-I uploaded new code to GitHub
+

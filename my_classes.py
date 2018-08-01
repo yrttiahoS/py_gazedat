@@ -648,7 +648,7 @@ class DataFolder:
                 #self.map_header_current  #None#self.map_header
 
                 # make new GazeReader object for reading and processing input file
-                f_processor = GazeReader(args_pro, self.limit_rows, anonymize = True)#, percentiles = percentiles) #40 is optional limit for rows
+                f_processor = GazeReader(args_pro, self.limit_rows, anonymize = anonymize)#, percentiles = percentiles) #40 is optional limit for rows
 
                 # make name for new gazedata file
                 _output_file = (f_processor.get_filename(no_ext=True) + "_std.gazedata")
@@ -701,11 +701,11 @@ class DataFolder:
         timeThreshold = time.mktime(self.date_limit) 
         print("Number of files in folder: " + str(len(items)))
         for itemNum, item in (enumerate(items)): 
-            itemCreated = os.path.getctime(self.dirpath + '\\' + item)
-            if itemCreated < timeThreshold:
+            itemModified = os.path.getmtime(self.dirpath + '\\' + item)
+            if itemModified < timeThreshold:
                 print(item + " is too old")                
             else:
-                filedate = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(itemCreated))
+                filedate = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(itemModified))
                 items_v2.append(item)
                 print(item + " has good date: " + filedate)
         print("Number of files selected for processing: " + str(len(items_v2)))

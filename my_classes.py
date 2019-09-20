@@ -471,6 +471,7 @@ class DataFolder:
                  input_file_delimiter = '\t',
                  map_header = None,
                  date_limit = "1 Jan 00",
+                 date_limit_type = "c", #c=created, m=modified
                  #map_header_current = None,
                  output_folder = "C:\\Users\\Public\\Documents\\Tampereen yliopisto\\Eye tracker\\TRE Cohort 2\\gazeAnalysisLib analyses\\testing data",
                  ): #t_args,
@@ -507,7 +508,7 @@ class DataFolder:
         #self.diritems = os.listdir(path)
         self.diritems  = [fileName for fileName in os.listdir(path) if fileName.endswith(file_ext)]
         self.diritems = self.diritems[self.limit_files[0]:self.limit_files[1]]
-        self.diritems = self.timethreshold_items(self.diritems)
+        self.diritems = self.timethreshold_items(self.diritems,date_limit_type)
         print("-------------------------")
         print("Files selected: " + str(self.diritems))
         print("-------------------------")
@@ -694,14 +695,17 @@ class DataFolder:
         #return stats of specific variable
         return self.out_stats[header]
 
-    def timethreshold_items(self, items):
+    def timethreshold_items(self, items, type):
         #return stats of specific variable
 
         items_v2 = []
         timeThreshold = time.mktime(self.date_limit) 
         print("Number of files in folder: " + str(len(items)))
         for itemNum, item in (enumerate(items)): 
-            itemModified = os.path.getmtime(self.dirpath + '\\' + item)
+            if type == "m": 
+                itemModified = os.path.getmtime(self.dirpath + '\\' + item)
+            if type == "c":
+                itemModified = os.path.getctime(self.dirpath + '\\' + item)
             if itemModified < timeThreshold:
                 print(item + " is too old")                
             else:

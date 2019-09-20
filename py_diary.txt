@@ -389,4 +389,12 @@ C:\Users\Public\Documents\Tampereen yliopisto\Eye tracker\Aaltonen17\headers_in_
 	stays intanct when file is moved to different storage system/computer disk
 
 -I uploaded new code to GitHub
+*repo: py_gazedat 
 
+
+20.9.2018
+-it might be useful to use date created, as this allows filtering the most
+ recent files *added to my folder*
+*added new parameter to my_classes.py / DataFolder
+	**date_limit_type = "c" or date_limit_type = "m", for created or modified respectively
+*use with standardizeGazedata_0.3.py
